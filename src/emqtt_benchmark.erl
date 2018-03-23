@@ -53,7 +53,10 @@ init() ->
 main_loop(Uptime, Count) ->
 	receive
 		{connected, _N, _Client} ->
-			io:format("conneted: ~w~n", [Count]),
+      if 
+        Count rem 100 == 0 -> io:format("connected: ~w~n", [Count]);
+        true -> ok
+      end,
 			main_loop(Uptime, Count+1);
         stats ->
             print_stats(Uptime),
@@ -197,7 +200,6 @@ client_id(PubSub, N, Opts) ->
 
 topics_opt(Opts) ->
     Topics = topics_opt(Opts, []),
-    io:format("Topics: ~p~n", [Topics]),
     [feed_var(bin(Topic), Opts) || Topic <- Topics].
 
 topics_opt([], Acc) ->
